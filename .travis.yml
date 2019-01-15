@@ -7,7 +7,10 @@ branches:
   - trying.tmp
 
 env:
-  - UNCERTAINTIES="N" PYTHON="3.6" NUMPY_VERSION=1.14 PANDAS=1
+  # Will need to set pandas version(s) in the future and change the pandas install line
+  - PYTHON="3.5" PANDAS=1
+  - PYTHON="3.6" PANDAS=1
+  - PYTHON="3.7" PANDAS=1
 
 before_install:
   - sudo apt-get update
@@ -33,7 +36,6 @@ before_install:
 install:
   - conda create --yes -n $ENV_NAME python=$PYTHON pip
   - source activate $ENV_NAME
-  - conda install --yes numpy==$NUMPY_VERSION;
   # this is superslow but suck it up until updates to pandas are made
   # will need to change this to main pint repo later
   - pip install numpy cython pytest pytest-cov nbval; 
