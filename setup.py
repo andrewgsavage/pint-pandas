@@ -27,7 +27,7 @@ __doc__ = long_description
 
 install_requirements = [
     "pint",
-    "pandas",
+    "pandas>=0.24.0rc1",
 ]
 
 extra_requirements = {
