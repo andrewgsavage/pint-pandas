@@ -26,6 +26,7 @@ long_description = '\n\n'.join([read('README.md'),
 __doc__ = long_description
 
 install_requirements = [
+    "pint",
     "pandas",
 ]
 
