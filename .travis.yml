@@ -7,10 +7,9 @@ branches:
   - trying.tmp
 
 env:
-  # Will need to set pandas version(s) in the future and change the pandas install line
-  - PYTHON="3.5" PANDAS=1
-  - PYTHON="3.6" PANDAS=1
-  - PYTHON="3.7" PANDAS=1
+  - PYTHON="3.5"
+  - PYTHON="3.6"
+  - PYTHON="3.7"
 
 before_install:
   - sudo apt-get update
@@ -36,20 +35,11 @@ before_install:
 install:
   - conda create --yes -n $ENV_NAME python=$PYTHON pip
   - source activate $ENV_NAME
-  # this is superslow but suck it up until updates to pandas are made
-  # will need to change this to main pint repo later
-  - pip install numpy cython pytest pytest-cov nbval; 
-  - pip install --upgrade --pre pandas;
-  - pip install pint;
-  - python -c 'import pandas; print(pandas.__version__)'; python -c 'import pandas; print(pandas.__version__)'; 
-  - pip install coveralls
+  - pip install -e .[test]
 
 script:
-  # if we're doing the pandas tests and hence have pytest available, we can
-  # simply use it to run all the tests
-  - python -m coverage run -p --source=pintpandas --omit="*test*","*compat*" -m py.test -rfsxEX;
-  # test notebooks too
-  - pip install -e .; python -m pytest --nbval notebooks;
+  - python -m coverage run -p --source=pintpandas --omit="*test*","*compat*" -m py.test -rfsxEX
+  - python -m pytest --nbval notebooks
   - coverage combine
   - coverage report -m
 
