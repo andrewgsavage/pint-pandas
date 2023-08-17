@@ -938,6 +938,34 @@ class PintArray(ExtensionArray, ExtensionOpsMixin):
 
         return self._from_sequence(result, self.units)
 
+    def round(self, decimals: int = 0, *args, **kwargs):
+        """
+        Round each value in the array a to the given number of decimals.
+
+        Parameters
+        ----------
+        decimals : int, default 0
+            Number of decimal places to round to. If decimals is negative,
+            it specifies the number of positions to the left of the decimal point.
+        *args, **kwargs
+            Additional arguments and keywords have no effect but might be
+            accepted for compatibility with NumPy.
+
+        Returns
+        -------
+        PintArray
+            Rounded values of the PintArray.
+
+        See Also
+        --------
+        numpy.around : Round values of an np.array.
+        DataFrame.round : Round values of a DataFrame.
+        Series.round : Round values of a Series.
+        """
+        values = np.round(self._data, decimals=decimals, **kwargs)
+
+        return self._from_sequence(values, self.units)
+
 
 PintArray._add_arithmetic_ops()
 PintArray._add_comparison_ops()

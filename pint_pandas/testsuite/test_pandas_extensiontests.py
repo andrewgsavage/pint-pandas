@@ -677,3 +677,7 @@ class TestAccumulate(base.BaseAccumulateTests):
             expected = getattr(s_unitless, op_name)(skipna=skipna)
             expected = pd.Series(expected, dtype=s.dtype)
             tm.assert_series_equal(result, expected, check_dtype=False)
+
+
+class TestRounding(base.BaseRoundingTests):
+    pass
