@@ -306,8 +306,25 @@ class PintArray(ExtensionArray, ExtensionScalarOpsMixin):
         inputs = convert_np_inputs(inputs)
         if out:
             kwargs["out"] = convert_np_inputs(out)
-        print(inputs)
         result = getattr(ufunc, method)(*inputs, **kwargs)
+        return self._convert_np_result(result)
+
+    def __array_function__(self, func, types, args, kwargs):
+        out = kwargs.get("out", ())
+        print("array_function")
+        for x in args + out:
+            # Only support operations with instances of _HANDLED_TYPES.
+            # Use ArrayLike instead of type(self) for isinstance to
+            # allow subclasses that don't override __array_ufunc__ to
+            # handle ArrayLike objects.
+            if not isinstance(x, self._HANDLED_TYPES + (PintArray,)):
+                return NotImplemented
+                
+        # Defer to pint's implementation of the ufunc.
+        args = convert_np_inputs(args)
+        if out:
+            kwargs["out"] = convert_np_inputs(out)
+        result = func(*args, **kwargs)
         return self._convert_np_result(result)
 
     def _convert_np_result(self, result):
@@ -326,6 +343,8 @@ class PintArray(ExtensionArray, ExtensionScalarOpsMixin):
             # no return value
             return result
         elif pd.api.types.is_bool_dtype(result):
+            return result
+        elif isinstance(result, bool):
             return result
         else:
             # one return value
